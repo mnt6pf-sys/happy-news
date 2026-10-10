@@ -8,11 +8,10 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
   <header class="bg-white border-b-4 border-yellow-400 p-6 text-center shadow-sm sticky top-0 z-10">
-    <h1 class="text-3xl font-extrabold text-gray-900">☀️️ HappyNews</h1>
+    <h1 class="text-3xl font-extrabold text-gray-900">☀ HappyNews</h1>
     <p class="text-gray-500 text-sm mt-2 font-medium">AIが選んだ、今日を少し良くするニュース</p>
   </header>
 
-  <!-- 広告用スペース（ここに後からAdSenseなどを貼ります） -->
   <div class="max-w-3xl mx-auto mt-6 bg-gray-200 text-gray-400 text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
     <p class="text-sm">【ここに収益化のための広告が表示されます】</p>
   </div>
@@ -22,7 +21,6 @@
   </main>
 
   <script>
-    // 自動更新されるデータを読み込む
     async function loadNews() {
       try {
         const res = await fetch("./data.json");
@@ -30,12 +28,27 @@
         const container = document.getElementById('news-container');
         
         container.innerHTML = newsList.map(item => `
-          <article class="bg-white p-6 rounded-2xl shadow-sm mb-6 border border-gray-100 hover:shadow-lg transition duration-300">
-            <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block">ポジティブ</span>
-            <h2 class="font-bold text-xl text-gray-900 mb-3 leading-snug">${item.title}</h2>
-            <a href="${item.link}" target="_blank" rel="noopener" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800">
-              記事を読む <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            </a>
+          <article class="bg-white rounded-2xl shadow-sm mb-6 border border-gray-100 hover:shadow-lg transition duration-300 overflow-hidden flex flex-col md:flex-row">
+            
+            <!-- ① 左側の写真表示エリア -->
+            <div class="md:w-1/3 h-48 md:h-auto">
+              <img src="${item.image}" alt="ニュース画像" class="w-full h-full object-cover">
+            </div>
+            
+            <!-- 右側のテキストエリア -->
+            <div class="p-6 md:w-2/3 flex flex-col justify-center">
+              <div>
+                <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block">ポジティブ</span>
+              </div>
+              <h2 class="font-bold text-xl text-gray-900 mb-2 leading-snug">${item.title}</h2>
+              
+              <!-- ② 約50文字の本文を表示するエリア -->
+              <p class="text-gray-600 text-sm mb-4 leading-relaxed">${item.snippet || ''}</p>
+              
+              <a href="${item.link}" target="_blank" rel="noopener" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800 mt-auto">
+                記事を読む <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+              </a>
+            </div>
           </article>
         `).join('');
       } catch (error) {
