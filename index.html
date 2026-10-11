@@ -3,16 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- ブラウザのタブに表示される名前も変更しました -->
-  <title>GOOD NEWS TODAY | あなたの一日を明るい気持ちでスタートできるニュースサイト</title>
+  <title>GOOD NEWS TODAY | 前向きな話題を厳選 あなたの一日を明るい気持ちでスタートできるニュースサイト</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
   <header class="bg-white border-b-4 border-yellow-400 p-6 text-center shadow-sm sticky top-0 z-10">
-    <!-- サイト名を「GOOD NEWS TODAY」に変更しました -->
     <h1 class="text-3xl font-extrabold text-gray-900">☀ GOOD NEWS TODAY</h1>
-    <!-- サブタイトルをご希望のものに変更しました -->
-    <p class="text-gray-500 text-sm mt-2 font-medium">あなたの一日を明るい気持ちでスタートできるニュースサイト</p>
+    <p class="text-gray-500 text-sm mt-2 font-medium">前向きな話題を厳選 あなたの一日を明るい気持ちでスタートできるニュースサイト</p>
   </header>
 
   <div class="max-w-3xl mx-auto mt-6 bg-gray-200 text-gray-400 text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
@@ -24,35 +21,76 @@
   </main>
 
   <script>
+    function getSavedLikes() {
+      return JSON.parse(localStorage.getItem('goodNewsLikes') || '[]');
+    }
+
+    function toggleLike(button, link) {
+      let likes = getSavedLikes();
+      
+      if (likes.includes(link)) {
+        // すでに押してある場合は解除（グレーに戻す）
+        likes = likes.filter(l => l !== link);
+        button.classList.remove('text-orange-500', 'bg-orange-50');
+        button.classList.add('text-gray-400', 'hover:bg-gray-100');
+      } else {
+        // 新しく押した場合（オレンジ色の太陽にする）
+        likes.push(link);
+        button.classList.remove('text-gray-400', 'hover:bg-gray-100');
+        button.classList.add('text-orange-500', 'bg-orange-50');
+        
+        // 押したときのアニメーション
+        button.style.transform = 'scale(1.15) rotate(15deg)'; // 少し回転する動きも追加
+        setTimeout(() => button.style.transform = 'scale(1) rotate(0deg)', 200);
+      }
+      
+      localStorage.setItem('goodNewsLikes', JSON.stringify(likes));
+    }
+
     async function loadNews() {
       try {
         const res = await fetch("./data.json");
         const newsList = await res.json();
         const container = document.getElementById('news-container');
+        const likes = getSavedLikes();
         
-        container.innerHTML = newsList.map(item => `
+        container.innerHTML = newsList.map(item => {
+          const isLiked = likes.includes(item.link);
+          const likeBtnClass = isLiked ? 'text-orange-500 bg-orange-50' : 'text-gray-400 hover:bg-gray-100';
+
+          return `
           <article class="bg-white rounded-2xl shadow-sm mb-6 border border-gray-100 hover:shadow-lg transition duration-300 overflow-hidden flex flex-col md:flex-row">
             
-            <div class="md:w-1/3 h-48 md:h-auto">
+            <div class="md:w-1/3 h-48 md:h-auto flex-shrink-0">
               <img src="${item.image}" alt="ニュース画像" class="w-full h-full object-cover">
             </div>
             
-            <div class="p-6 md:w-2/3 flex flex-col justify-center">
+            <div class="p-6 md:w-2/3 flex flex-col justify-center w-full">
               <div>
                 <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block">ポジティブ</span>
               </div>
               <h2 class="font-bold text-xl text-gray-900 mb-2 leading-snug">${item.title}</h2>
-              
               <p class="text-gray-600 text-sm mb-4 leading-relaxed">${item.snippet || ''}</p>
               
-              <a href="${item.link}" target="_blank" rel="noopener" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800 mt-auto">
-                記事を読む <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-              </a>
+              <div class="mt-auto flex items-center justify-between border-t border-gray-50 pt-4">
+                
+                <!-- 太陽のアイコンに変更したボタン -->
+                <button onclick="toggleLike(this, '${item.link}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-sm transition-all duration-200 ${likeBtnClass}">
+                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 2.366a1 1 0 011.415 0l.707.707a1 1 0 01-1.414 1.415l-.707-.707a1 1 0 010-1.415zM17 10a1 1 0 01-1-1h-1a1 1 0 110-2h1a1 1 0 011 1zm-1.634 4.22a1 1 0 010 1.415l-.707.707a1 1 0 01-1.415-1.414l.707-.707a1 1 0 011.415 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-4.22-1.634a1 1 0 01-1.415 0l-.707-.707a1 1 0 011.414-1.415l.707.707a1 1 0 010 1.415zM4 10a1 1 0 01-1-1H2a1 1 0 110 2h1a1 1 0 011-1zm1.634-4.22a1 1 0 010-1.415l.707-.707a1 1 0 011.415 1.414l-.707.707a1 1 0 01-1.415 0zM10 5a5 5 0 100 10 5 5 0 000-10z" clip-rule="evenodd"></path>
+                  </svg>
+                  GOOD NEWS
+                </button>
+
+                <a href="${item.link}" target="_blank" rel="noopener" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800">
+                  記事を読む <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+              </div>
+
             </div>
           </article>
-        `).join('');
+        `}).join('');
       } catch (error) {
-        // エラー時のメッセージも少し自然な表現に調整しています
         document.getElementById('news-container').innerHTML = '<p class="text-center text-gray-500">現在、最新のニュースを集めています。しばらくお待ちください。</p>';
       }
     }
