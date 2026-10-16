@@ -34,14 +34,14 @@
         button.classList.remove('text-orange-500', 'bg-orange-50');
         button.classList.add('text-gray-400', 'hover:bg-gray-100');
       } else {
-        // 新しく押した場合（オレンジ色の太陽にする）
+        // 新しく押した場合（オレンジ色にする）
         likes.push(link);
         button.classList.remove('text-gray-400', 'hover:bg-gray-100');
         button.classList.add('text-orange-500', 'bg-orange-50');
         
         // 押したときのアニメーション
-        button.style.transform = 'scale(1.15) rotate(15deg)'; // 少し回転する動きも追加
-        setTimeout(() => button.style.transform = 'scale(1) rotate(0deg)', 200);
+        button.style.transform = 'scale(1.15) translateY(-2px)'; // 少し浮き上がる動きを追加
+        setTimeout(() => button.style.transform = 'scale(1) translateY(0)', 200);
       }
       
       localStorage.setItem('goodNewsLikes', JSON.stringify(likes));
@@ -74,10 +74,10 @@
               
               <div class="mt-auto flex items-center justify-between border-t border-gray-50 pt-4">
                 
-                <!-- 太陽のアイコンに変更したボタン -->
+                <!-- 親指を立てたマークに変更したボタン -->
                 <button onclick="toggleLike(this, '${item.link}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-sm transition-all duration-200 ${likeBtnClass}">
                   <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 2.366a1 1 0 011.415 0l.707.707a1 1 0 01-1.414 1.415l-.707-.707a1 1 0 010-1.415zM17 10a1 1 0 01-1-1h-1a1 1 0 110-2h1a1 1 0 011 1zm-1.634 4.22a1 1 0 010 1.415l-.707.707a1 1 0 01-1.415-1.414l.707-.707a1 1 0 011.415 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-4.22-1.634a1 1 0 01-1.415 0l-.707-.707a1 1 0 011.414-1.415l.707.707a1 1 0 010 1.415zM4 10a1 1 0 01-1-1H2a1 1 0 110 2h1a1 1 0 011-1zm1.634-4.22a1 1 0 010-1.415l.707-.707a1 1 0 011.415 1.414l-.707.707a1 1 0 01-1.415 0zM10 5a5 5 0 100 10 5 5 0 000-10z" clip-rule="evenodd"></path>
+                    <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path>
                   </svg>
                   GOOD NEWS
                 </button>
